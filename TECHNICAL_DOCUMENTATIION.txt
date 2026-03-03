@@ -1,0 +1,17 @@
+PROJECT ARCHITECTURE OVERVIEW
+
+This system is modular and fully decoupled from the data source.
+
+To update data ingestion:
+Modify only data_loader.py.
+
+To change model:
+Adjust MODEL_TYPE in config.py.
+
+To update hyperparameters:
+Modify param_grid in modeling.py.
+
+The business logic remains intact regardless of source or model updates.
+
+Core Flow:
+Data -> Preprocessing -> Model Training -> Evaluation -> Explainability -> Business Simulation
