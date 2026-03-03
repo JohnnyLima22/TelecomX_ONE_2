@@ -1,258 +1,86 @@
-TelecomX – End-to-End Churn Prediction & Revenue Risk Modeling System
-Overview
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?style=for-the-badge&logo=numpy&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
+![SHAP](https://img.shields.io/badge/SHAP-black?style=for-the-badge)
 
-TelecomX is a production-oriented end-to-end machine learning system for churn prediction and revenue risk estimation in subscription-based businesses.
+📊 TelecomX – End-to-End Churn Prediction & Revenue Risk Modeling
+🎯 Project Overview
 
-The project demonstrates:
+TelecomX is a production-oriented machine learning system designed to predict customer churn and estimate financial exposure in subscription-based models.
 
-Modular ML pipeline design
+While most churn projects stop at classification, this system goes further by implementing Probabilistic Risk Scoring and Financial Impact Simulation, allowing stakeholders to see the "revenue at risk" in real-time.
+🧠 Problem Definition
 
-Cross-validated model optimization
-
-Probabilistic risk scoring
-
-Financial impact simulation
-
-Interactive decision-support dashboard
-
-The system is structured for scalability, maintainability, and extensibility.
-
-Problem Definition
-
-Churn prediction is formulated as a binary classification problem:
-
-P(Y=1∣X)
+Churn prediction is treated as a binary classification task:
 P(Y=1∣X)
 
 Where:
 
-Y=1
-Y=1 indicates customer churn
+    Y=1: The customer cancels the service.
 
-X
-X represents engineered behavioral and contractual features
+    X: Vector of behavioral features (contract type, payment method, monthly charges).
 
-Beyond prediction accuracy, the system focuses on:
+The system prioritizes Probability Calibration and Threshold Sensitivity to align model outputs with operational retention costs.
+🏗️ System Architecture & Modularity
 
-Probability calibration
+The project follows a decoupled architecture, ensuring scalability and ease of maintenance.
+Modular Breakdown:
 
-Threshold sensitivity
+    config.py: Centralized environment variables and model hyperparameters.
 
-Revenue-weighted risk estimation
+    data_loader.py: Agnostic data ingestion layer (CSV, SQL, API).
 
-System Architecture
-Data Ingestion
-    ↓
-Feature Engineering
-    ↓
-Train/Test Split
-    ↓
-Cross-Validated Model Training
-    ↓
-ROC-AUC Optimization
-    ↓
-Probability Scoring
-    ↓
-Revenue Risk Simulation
-    ↓
-Streamlit Dashboard
-Modular Structure
+    data_preparation.py: Automated ETL and feature engineering pipeline.
 
-data_preparation.py → preprocessing & feature engineering
+    preprocessing.py: Robust scaling and encoding using ColumnTransformers.
 
-model_training.py → model training & evaluation
+    modeling.py: Implementation of GridSearchCV for hyperparameter optimization.
 
-business_simulation.py → revenue impact modeling
+    explainability.py: Integration with SHAP for global and local interpretability.
 
-config.py → centralized configuration
+    business_simulation.py: Financial logic for ROI and Revenue Loss calculations.
 
-dashboard.py → interactive visualization layer
+    dashboard.py: High-level UI for decision support.
 
-The separation of concerns enables easy refactoring and scaling.
+📈 Model Performance & Evaluation
 
-Model Performance
+The system was optimized for ROC-AUC to ensure stable performance despite class imbalance.
+Metric	Value
+ROC-AUC	0.95
+Accuracy	0.87
+Precision (Churn)	0.81
+Recall (Churn)	0.67
 
-ROC-AUC: 0.95
+    Note on Strategy: In churn scenarios, we often prioritize Recall to capture the maximum number of potential leavers, even at the cost of some False Positives (who will still benefit from retention campaigns).
 
-Accuracy: 0.87
+💰 Revenue Risk Modeling
 
-Precision (churn class): 0.81
+Instead of a simple "Yes/No", the system calculates the Expected Revenue Loss using a probabilistic approach:
+Lrevenue​=i=1∑n​(P(yi​=1∣xi​)×Ticketavg​)
 
-Recall (churn class): 0.67
+This allows for a smoother financial projection that doesn't depend on a fixed binary threshold, providing a more realistic view of the Annual Recurring Revenue (ARR) at risk.
+🧪 Explainability (XAI)
 
-The model demonstrates strong class separation and stable generalization under cross-validation.
+Using SHAP (SHapley Additive exPlanations), the system breaks down the "Black Box" of Machine Learning:
 
-ROC-AUC was selected as the primary optimization metric due to class imbalance considerations.
+    Global: Identifies that "Month-to-Month" contracts are the primary churn drivers.
 
-Revenue Risk Modeling
+    Local: Explains to a customer service agent exactly why a specific client is at high risk.
 
-Revenue exposure is computed as:
+🚀 Running the System
+Bash
 
-Expected Revenue Loss=∑P(churni)×Average Ticket
-Expected Revenue Loss=∑P(churn
-i
-	​
-
-)×Average Ticket
-
-This probabilistic approach avoids binary threshold dependency and provides smoother financial projections.
-
-Example Output:
-
-Estimated Annual Revenue at Risk: $515,760
-
-Decision Threshold Engineering
-
-The dashboard includes dynamic threshold adjustment:
-
-Enables precision-recall tradeoff exploration
-
-Supports business-driven decision calibration
-
-Allows scenario simulation for retention campaigns
-
-This aligns model outputs with operational constraints.
-
-Explainability
-
-The system integrates SHAP for feature-level interpretability, enabling:
-
-Global feature importance analysis
-
-Local explanation for individual predictions
-
-Transparency for stakeholder communication
-
-Dashboard Capabilities
-
-The Streamlit dashboard provides:
-
-ROC curve visualization
-
-Probability distribution analysis
-
-High-risk client ranking
-
-Revenue exposure estimation
-
-Individual client simulation
-
-The UI is designed for executive and operational stakeholders.
-
-Engineering Principles Demonstrated
-
-Modular architecture
-
-Reproducible training
-
-Separation of configuration
-
-Probabilistic modeling
-
-Business-aligned evaluation metrics
-
-Clean interface between ML layer and UI layer
-
-Scalability Roadmap
-
-Future extensions:
-
-Model monitoring & drift detection
-
-Batch & real-time inference API
-
-CI/CD pipeline integration
-
-Cloud deployment (AWS/GCP/Azure)
-
-Automated retraining pipeline
-
-Feature store integration
-
-Running the Project
+# 1. Install dependencies
 pip install -r requirements.txt
+
+# 2. Run the training & simulation pipeline
 python main.py
+
+# 3. Launch the Interactive Dashboard
 streamlit run dashboard.py
-What This Project Demonstrates
 
-Strong ML fundamentals
+🇧🇷 Resumo (Português)
 
-Probabilistic modeling mindset
-
-Revenue-aware modeling
-
-Production-oriented code organization
-
-Ability to connect ML outputs to business metrics
-
-🇧🇷 (Português)
-TelecomX – Sistema End-to-End de Predição de Churn e Modelagem de Risco de Receita
-Visão Geral
-
-O TelecomX é um sistema completo de Machine Learning para predição de churn e estimativa de exposição financeira em negócios baseados em assinatura.
-
-O projeto demonstra:
-
-Pipeline modular de ML
-
-Otimização com validação cruzada
-
-Score probabilístico de risco
-
-Modelagem de impacto financeiro
-
-Camada interativa de decisão
-
-Estruturado para escalabilidade e manutenção em ambiente de produção.
-
-Definição do Problema
-
-Classificação binária:
-
-P(Y = 1 | X)
-
-Onde:
-
-Y = churn
-
-X = atributos comportamentais e contratuais
-
-Foco não apenas em acurácia, mas em:
-
-Calibração probabilística
-
-Sensibilidade ao threshold
-
-Estimativa de risco ponderada por receita
-
-Performance
-
-ROC-AUC: 0.95
-
-Acurácia: 0.87
-
-Precisão (classe churn): 0.81
-
-Recall (classe churn): 0.67
-
-O modelo apresenta boa generalização e forte capacidade discriminatória.
-
-Modelagem Financeira
-
-Receita esperada em risco:
-
-Somatório das probabilidades individuais multiplicadas pelo ticket médio.
-
-Isso evita dependência binária de threshold e fornece estimativa contínua de impacto.
-
-Princípios de Engenharia
-
-Separação de responsabilidades
-
-Pipeline reprodutível
-
-Métrica alinhada ao problema
-
-Arquitetura desacoplada
-
-Integração entre ML e camada de visualização
+Sistema completo de predição de churn focado em impacto financeiro. O diferencial deste projeto é a tradução de métricas técnicas (como AUC-ROC) em métricas de negócio (Receita em Risco). Utiliza arquitetura modular, validação cruzada para evitar overfitting e inteligência explicável com SHAP para dar transparência às decisões do modelo.
